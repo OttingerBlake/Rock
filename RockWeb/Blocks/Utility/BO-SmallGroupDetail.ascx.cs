@@ -4,6 +4,7 @@ using Rock;
 using Rock.Data;
 using Rock.Model;
 using Rock.Web.UI;
+using Rock.Attribute;
 
 namespace RockWeb.Blocks.Utility
 {
