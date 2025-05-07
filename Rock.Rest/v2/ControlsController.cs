@@ -62,6 +62,8 @@ using Rock.Web.Cache;
 using Rock.Web.Cache.Entities;
 using Rock.Web.UI.Controls;
 using Rock.Workflow;
+using System.Web.Http;
+using Rock.Rest.v2.Models;  
 
 using Authorization = Rock.Security.Authorization;
 
@@ -10192,5 +10194,42 @@ namespace Rock.Rest.v2
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns a list of small groups for our picker.
+        /// </summary>
+        /// <param name="includeInactive">
+        ///   Returns inactive groups if true. 
+        /// </param>
+        /// <returns>
+        ///   200 OK with an array of the following format: { Guid, Name, IsActive }
+        /// </returns>
+        [HttpGet]
+        [Route("GroupPickerOptions")]
+        public IHttpActionResult GetGroupPickerOptions(bool includeInactive = false)
+        {
+            using (var rockContext = new RockContext())
+            {
+                var qry = new GroupService(rockContext).Queryable();
+
+                if (!includeInactive)
+                {
+                    qry = qry.Where(g => g.IsActive);
+                }
+
+                var list = qry
+                    .Select(g => new GroupPickerOptionDto
+                    {
+                        Guid = g.Guid,
+                        Name = g.Name,
+                        IsActive = g.IsActive
+                    })
+                    .ToList();
+
+                return Ok(list);
+            }
+        }
+
+
     }
 }

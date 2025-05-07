@@ -1,0 +1,55 @@
+<script setup lang="ts">
+    import { ref, watch, onMounted } from "vue";
+
+    // We are using this, ESlint is complaining erronously
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    import BaseAsyncPicker from "./baseAsyncPicker.obs";
+    import { ListItemBag } from "@Obsidian/ViewModels/Utility/listItemBag";
+
+    const props = defineProps({
+        includeInactive: {
+            type: Boolean,
+            default: false
+        }
+    });
+
+    const items = ref([] as ListItemBag[]);
+    const isLoading = ref(false);
+
+    async function loadItems(): Promise<void> {
+        isLoading.value = true;
+
+        try {
+            const resp = await fetch(
+                `/api/v2/Controls/GroupPickerOptions?includeInactive=${props.includeInactive}`
+            );
+
+            // Uh oh.
+            if (!resp.ok) {
+                throw new Error(`HTTP ${resp.status}`);
+            }
+
+            // load JSON and manipulate it to the expected format
+            const raw = await resp.json();
+            const list = raw as Array<{
+                guid: string;
+                name: string;
+                isActive: boolean;
+            }>;
+
+            items.value = list.map(g => ({
+                text: g.name,
+                value: g.guid
+            }));
+        }
+        catch (e) {
+            console.error("Error - failed to load groups:", e);
+        }
+        finally {
+            isLoading.value = false;
+        }
+    }
+
+    onMounted(loadItems);
+    watch(() => props.includeInactive, loadItems);
+</script>
