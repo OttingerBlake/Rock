@@ -17,7 +17,7 @@
                             <asp:HyperLinkField HeaderText="Name"
                                                 DataTextField="Name"
                                                 DataNavigateUrlFields="Id"
-                                                DataNavigateUrlFormatString="~/page/837?GroupId={0}"
+                                                DataNavigateUrlFormatString="~/SmallGroups/Details?GroupId={0}"
                                                 SortExpression="Name" />
                             <Rock:RockBoundField DataField="Description"
                                                   HeaderText="Description"

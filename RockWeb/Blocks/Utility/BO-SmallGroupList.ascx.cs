@@ -42,7 +42,7 @@ namespace RockWeb.Blocks.Utility
                                 .Where(gt => gt.Name == "Small Group")
                                 .Select(gt => gt.Id)
                                 .FirstOrDefault();
-
+            // Retrieve small groups
             var groups = new GroupService(rockContext)
                             .Queryable()
                             .Where(g => g.IsActive && g.GroupTypeId == groupTypeId)

@@ -23,6 +23,7 @@ namespace RockWeb.Blocks.Utility
 
         private void ShowDetails()
         {
+            // Verify group ID
             int groupId = PageParameter("GroupId").AsInteger();
             if (groupId == 0)
             {
